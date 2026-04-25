@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProfileType {
+  developer
+  designer
+  student
+  entrepreneur
+  photographer
+}
+
+enum SubscriptionStatus {
+  FREE
+  PREMIUM
+}
+
+enum PortfolioTemplate {
+  AURORA
+  MIDNIGHT
+  EDITORIAL
+  MINIMAL
+  SPLIT
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  name         String
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      Profile?
+  portfolios   Portfolio[]
+  subscription Subscription?
+}
+
+model Profile {
+  id        String      @id @default(cuid())
+  userId    String      @unique
+  type      ProfileType
+  bio       String      @default("")
+  avatarUrl String      @default("")
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Portfolio {
+  id          String      @id @default(cuid())
+  userId      String
+  title       String
+  description String      @default("")
+  template    PortfolioTemplate @default(MINIMAL)
+  slug        String      @unique
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects    Project[]
+
+  @@index([userId])
+}
+
+model Project {
+  id           String    @id @default(cuid())
+  portfolioId  String
+  title        String
+  description  String    @default("")
+  imageUrl     String    @default("")
+  link         String    @default("")
+  createdAt    DateTime  @default(now())
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@index([portfolioId])
+}
+
+model Subscription {
+  id        String              @id @default(cuid())
+  userId    String              @unique
+  status    SubscriptionStatus  @default(FREE)
+  startDate DateTime?
+  endDate   DateTime?
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

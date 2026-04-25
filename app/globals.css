@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+
+@source "../app/**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
+
+@theme {
+  --font-syne: 'Syne', sans-serif;
+  --font-dm-sans: 'DM Sans', sans-serif;
+
+  --color-brand-accent: #e8673a;
+  --color-brand-accent-2: #7c4fe0;
+  --color-brand-background: #f8f7f4;
+  --color-brand-foreground: #0f0e0d;
+  --color-brand-muted: #6b6760;
+  --color-brand-subtle: #a8a49f;
+  --color-brand-border: #e8e4df;
+
+  --shadow-brand-sm: 0 1px 3px rgba(15, 14, 13, 0.06), 0 1px 2px rgba(15, 14, 13, 0.04);
+  --shadow-brand-md: 0 12px 28px rgba(15, 14, 13, 0.08), 0 6px 14px rgba(15, 14, 13, 0.05);
+  --shadow-brand-lg: 0 24px 60px rgba(15, 14, 13, 0.12), 0 10px 30px rgba(15, 14, 13, 0.08);
+
+  --radius-brand: 1.25rem;
+  --radius-brand-lg: 1.5rem;
+  --radius-brand-xl: 2rem;
+}
+
+:root {
+  --background: #f8f7f4;
+  --foreground: #0f0e0d;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: var(--color-brand-border);
+    font-family: var(--font-dm-sans);
+  }
+
+  html, body {
+    background-color: var(--color-brand-background);
+    color: var(--color-brand-foreground);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-syne);
+    font-weight: 700;
+  }
+
+  input, button, textarea, select {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(135deg, var(--color-brand-accent) 0%, var(--color-brand-accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20;
+  }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.55s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.35s ease-out both;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6d1cb;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b7b1aa;
+}
