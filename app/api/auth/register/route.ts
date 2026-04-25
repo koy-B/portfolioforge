@@ -30,8 +30,6 @@ export async function POST(request: Request) {
         profile: {
           create: {
             type: 'developer',
-            bio: '',
-            avatarUrl: '',
           },
         },
         subscription: {
@@ -45,22 +43,16 @@ export async function POST(request: Request) {
         email: true,
         name: true,
         role: true,
-        createdAt: true,
-        updatedAt: true,
       },
     })
 
+    console.log('[REGISTER_SUCCESS]', user.email)
     const token = createAuthToken(user)
-    const response = NextResponse.json(
-      {
-        user,
-      },
-      { status: 201 },
-    )
-    response.cookies.set(createAuthCookie(token))
-    return response
+    const res = NextResponse.json({ success: true, userId: user.id }, { status: 201 })
+    res.cookies.set(createAuthCookie(token))
+    return res
   } catch (error) {
-    console.error('[REGISTER_ERROR]', error)
-    return jsonError('Internal server error', 500)
+    console.error('[REGISTER_FATAL_ERROR]', error)
+    return jsonError('Internal server error during registration', 500)
   }
 }

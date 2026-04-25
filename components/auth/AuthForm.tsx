@@ -43,7 +43,18 @@ export function AuthForm({ mode }: AuthFormProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
-      const data = await response.json()
+
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('The server returned an unexpected response. Please try again or check the logs.')
+      }
+
+      let data
+      try {
+        data = await response.json()
+      } catch {
+        throw new Error('Failed to parse server response.')
+      }
 
       if (!response.ok) {
         const fieldErrors = data?.details?.fieldErrors ?? {}
