@@ -123,13 +123,11 @@ export function createAuthCookie(token: string) {
   return {
     name: AUTH_COOKIE_NAME,
     value: token,
-    options: {
-      httpOnly: true,
-      sameSite: 'lax' as const,
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
-    },
+    httpOnly: true,
+    sameSite: 'lax' as const,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7,
   }
 }
 
@@ -137,13 +135,11 @@ export function clearAuthCookie() {
   return {
     name: AUTH_COOKIE_NAME,
     value: '',
-    options: {
-      httpOnly: true,
-      sameSite: 'lax' as const,
-      secure: process.env.NODE_ENV === 'production',
-      path: '/',
-      maxAge: 0,
-    },
+    httpOnly: true,
+    sameSite: 'lax' as const,
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 0,
   }
 }
 
