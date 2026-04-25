@@ -13,6 +13,13 @@ interface AuthFormProps {
   mode: Mode
 }
 
+type AuthResponse = {
+  error?: string
+  details?: {
+    fieldErrors?: Record<string, string[] | undefined>
+  }
+}
+
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter()
   const { toast } = useToast()
@@ -40,10 +47,30 @@ export function AuthForm({ mode }: AuthFormProps) {
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
         body: JSON.stringify(payload),
       })
-      const data = await response.json()
+
+      const contentType = response.headers.get('content-type')
+      const responseText = await response.text()
+
+      let data: AuthResponse | null = null
+      if (responseText) {
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('The server returned an unexpected response. Please try again or check the logs.')
+        }
+
+        try {
+          data = JSON.parse(responseText)
+        } catch {
+          throw new Error('Failed to parse server response.')
+        }
+      } else if (!response.ok) {
+        throw new Error('The server returned an empty response.')
+      }
 
       if (!response.ok) {
         const fieldErrors = data?.details?.fieldErrors ?? {}
