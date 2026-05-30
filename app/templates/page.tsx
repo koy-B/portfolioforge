@@ -9,15 +9,78 @@ import { ArrowRight, Eye } from '@/lib/icons'
 const categories = ['All', 'Designer', 'Engineer', 'Writer', 'Photographer', 'Creative']
 
 const templates = [
-  { name: 'Luminary', category: 'Designer', from: '#e8673a', to: '#f0a060', desc: 'Warm and expressive. Perfect for visual designers.' },
-  { name: 'Architect', category: 'Engineer', from: '#7c4fe0', to: '#a67cff', desc: 'Clean and technical. Built for developers and engineers.' },
-  { name: 'Chronicle', category: 'Writer', from: '#0f0e0d', to: '#3a3836', desc: 'Minimal and text-focused. Ideal for writers and journalists.' },
-  { name: 'Prism', category: 'Creative', from: '#0ea5e9', to: '#7c4fe0', desc: 'Bold and colorful. Made for creative directors.' },
-  { name: 'Serif', category: 'Writer', from: '#6b6760', to: '#a8a49f', desc: 'Elegant and editorial. Great for content creators.' },
-  { name: 'Studio', category: 'Photographer', from: '#1a1916', to: '#4a4744', desc: 'Dark and dramatic. Built for photographers.' },
-  { name: 'Gradient', category: 'Designer', from: '#e8673a', to: '#7c4fe0', desc: 'Vibrant and modern. For bold self-promotion.' },
-  { name: 'Minimal', category: 'Engineer', from: '#f8f7f4', to: '#e8e4df', desc: 'Ultra-clean. Let your work do the talking.' },
-  { name: 'Canvas', category: 'Creative', from: '#fbbf24', to: '#e8673a', desc: 'Playful and artistic. For illustrators and artists.' },
+  {
+    name: 'Luminary',
+    category: 'Designer',
+    from: '#ef6d3b',
+    to: '#f4b56a',
+    desc: 'Warm, elegant layouts for design professionals who want visual storytelling and strong identity.',
+    accent: 'text-[#ac5b31] bg-[#fff1e6]',
+  },
+  {
+    name: 'Architect',
+    category: 'Engineer',
+    from: '#4f5fd3',
+    to: '#68a3ff',
+    desc: 'Structured and modern. Perfect for engineers with clean sections and technical credibility.',
+    accent: 'text-[#31417d] bg-[#eef3ff]',
+  },
+  {
+    name: 'Chronicle',
+    category: 'Writer',
+    from: '#111111',
+    to: '#57544f',
+    desc: 'A refined editorial layout built for story-driven portfolios and long-form narratives.',
+    accent: 'text-[#2a2a2a] bg-[#f6f5f3]',
+  },
+  {
+    name: 'Prism',
+    category: 'Creative',
+    from: '#0ea5e9',
+    to: '#7c4fe0',
+    desc: 'Bold, expressive color and motion-ready sections for creative directors and visual artists.',
+    accent: 'text-[#165f8b] bg-[#e8f4ff]',
+  },
+  {
+    name: 'Serif',
+    category: 'Writer',
+    from: '#7e6b50',
+    to: '#b09b8a',
+    desc: 'Editorial charm with a polished, magazine-style structure for content creators.',
+    accent: 'text-[#5c4732] bg-[#faf5ef]',
+  },
+  {
+    name: 'Studio',
+    category: 'Photographer',
+    from: '#1e1b19',
+    to: '#3b3a35',
+    desc: 'Dark, cinematic frames with crisp galleries designed for photographers and visual storytellers.',
+    accent: 'text-[#c7c5bd] bg-[#1d1b18]',
+  },
+  {
+    name: 'Gradient',
+    category: 'Designer',
+    from: '#f97316',
+    to: '#8b5cf6',
+    desc: 'Gradient-driven visuals and smooth transitions for designers who want a memorable first impression.',
+    accent: 'text-[#572a84] bg-[#f6efff]',
+  },
+  {
+    name: 'Minimal',
+    category: 'Engineer',
+    from: '#f7f5f1',
+    to: '#e7e2dc',
+    desc: 'Ultra-clean sections with maximum white space for a sleek and professional presentation.',
+    accent: 'text-[#4f4b45] bg-[#fbf7f0]',
+  },
+  {
+    name: 'Canvas',
+    category: 'Creative',
+    from: '#fbbf24',
+    to: '#f97316',
+    desc: 'Playful and warm, built for illustrators, artists and creative freelancers.',
+    accent: 'text-[#7f4f12] bg-[#fff4df]',
+  },
 ]
 
 export default function TemplatesPage() {
@@ -32,10 +95,10 @@ export default function TemplatesPage() {
         <div className="mb-14 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#e8673a]">Templates</p>
           <h1 className="mt-3 text-5xl font-semibold tracking-tight text-[#0f0e0d]">
-            Start with a template that fits your style
+            Choose a portfolio look that feels unique
           </h1>
-          <p className="mx-auto mt-4 max-w-lg text-[#6b6760]">
-            Every template is fully customizable &mdash; colors, fonts, and layout. Make it yours in minutes.
+          <p className="mx-auto mt-4 max-w-2xl text-[#6b6760]">
+            Each template is crafted with a specific audience in mind, from editorial storytellers to designers and technologists.
           </p>
         </div>
 
@@ -45,10 +108,10 @@ export default function TemplatesPage() {
               key={category}
               type="button"
               onClick={() => setSelected(category)}
-              className={`rounded-xl px-5 py-2 text-sm font-medium transition ${
+              className={`rounded-full border px-5 py-2 text-sm font-medium transition ${
                 selected === category
-                  ? 'bg-[#0f0e0d] text-white'
-                  : 'border border-[#e8e4df] bg-white text-[#6b6760] hover:bg-[#f8f7f4] hover:text-[#0f0e0d]'
+                  ? 'border-[#0f0e0d] bg-[#0f0e0d] text-white'
+                  : 'border-[#e8e4df] bg-white text-[#6b6760] hover:border-[#0f0e0d] hover:text-[#0f0e0d]'
               }`}
             >
               {category}
@@ -61,32 +124,44 @@ export default function TemplatesPage() {
             <Card
               key={template.name}
               padding="none"
-              className="group overflow-hidden border-[#ece8e3]"
+              className="group overflow-hidden border border-[#ece8e3] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
               onMouseEnter={() => setHovered(template.name)}
               onMouseLeave={() => setHovered(null)}
             >
-              <div
-                className="relative aspect-[4/3] overflow-hidden"
-                style={{ background: `linear-gradient(135deg, ${template.from}20, ${template.to}20)` }}
-              >
-                <div className="absolute inset-4 flex flex-col">
-                  <div
-                    className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold"
-                    style={{ background: `linear-gradient(135deg, ${template.from}, ${template.to})` }}
-                  >
-                    {template.name[0]}
+              <div className="relative overflow-hidden rounded-[1.5rem] bg-white">
+                <div className="p-6" style={{ background: `linear-gradient(135deg, ${template.from}18, ${template.to}18)` }}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div
+                      className="flex h-12 w-12 items-center justify-center rounded-2xl text-lg font-bold text-white"
+                      style={{ background: `linear-gradient(135deg, ${template.from}, ${template.to})` }}
+                    >
+                      {template.name[0]}
+                    </div>
+                    <div className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] ${template.accent}`}>
+                      {template.category}
+                    </div>
                   </div>
-                  <div className="mb-2 h-4 w-28 rounded bg-black/10" />
-                  <div className="mb-6 h-2.5 w-20 rounded bg-black/5" />
-                  <div className="grid flex-1 grid-cols-2 gap-2">
-                    {[...Array(4)].map((_, index) => (
-                      <div key={index} className="rounded-xl bg-white/70" />
-                    ))}
+
+                  <div className="mt-8 space-y-4">
+                    <div>
+                      <p className="text-2xl font-semibold text-[#0f0e0d]">{template.name}</p>
+                      <p className="mt-3 text-sm leading-7 text-[#5f5b54]">{template.desc}</p>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-3xl bg-white/90 p-4 shadow-sm">
+                        <p className="text-xs uppercase tracking-[0.22em] text-[#8f8a80]">Focus</p>
+                        <p className="mt-2 text-sm font-medium text-[#0f0e0d]">Strong hero messaging</p>
+                      </div>
+                      <div className="rounded-3xl bg-white/90 p-4 shadow-sm">
+                        <p className="text-xs uppercase tracking-[0.22em] text-[#8f8a80]">Best for</p>
+                        <p className="mt-2 text-sm font-medium text-[#0f0e0d]">User-first storytelling</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <div
-                  className={`absolute inset-0 flex items-center justify-center gap-3 bg-black/20 backdrop-blur-sm transition ${
+                  className={`absolute inset-0 flex items-center justify-center gap-3 bg-black/20 backdrop-blur-sm transition duration-300 ${
                     hovered === template.name ? 'opacity-100' : 'opacity-0'
                   }`}
                 >
@@ -100,11 +175,6 @@ export default function TemplatesPage() {
                     Preview
                   </Button>
                 </div>
-              </div>
-
-              <div className="space-y-2 p-5">
-                <p className="text-lg font-semibold text-[#0f0e0d]">{template.name}</p>
-                <p className="text-sm text-[#6b6760]">{template.desc}</p>
               </div>
             </Card>
           ))}

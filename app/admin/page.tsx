@@ -13,46 +13,84 @@ export default async function AdminPage() {
     redirect('/login')
   }
 
-  const [totalUsers, totalPortfolios, totalPremiumUsers, users, subscriptions] = await Promise.all([
-    prisma.user.count(),
-    prisma.portfolio.count(),
-    prisma.subscription.count({
-      where: { status: SubscriptionStatus.PREMIUM },
-    }),
-    prisma.user.findMany({
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        createdAt: true,
-        updatedAt: true,
-        profile: true,
-        subscription: true,
-        portfolios: { select: { id: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    }),
-    prisma.subscription.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            role: true,
+  const [totalUsers, totalPortfolios, totalPremiumUsers, totalPendingRequests, users, requests, logs] =
+    await Promise.all([
+      prisma.user.count(),
+      prisma.portfolio.count(),
+      prisma.subscription.count({
+        where: { status: SubscriptionStatus.PREMIUM },
+      }),
+      prisma.premiumRequest.count({
+        where: { status: 'PENDING' },
+      }),
+      prisma.user.findMany({
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+          profile: true,
+          subscription: true,
+          portfolios: { select: { id: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.premiumRequest.findMany({
+        where: { status: 'PENDING' },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+            },
           },
         },
-      },
-      orderBy: { id: 'desc' },
-    }),
-  ])
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.adminLog.findMany({
+        include: {
+          admin: {
+            select: { id: true, name: true },
+          },
+          user: {
+            select: { id: true, name: true, email: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 30,
+      }),
+    ])
 
   const stats = {
     totalUsers,
     totalPortfolios,
     totalPremiumUsers,
+    totalPendingRequests,
   }
 
-  return <AdminDashboardClient admin={admin} stats={stats} users={users} subscriptions={subscriptions} />
+  const serializedRequests = requests.map((request) => ({
+    ...request,
+    createdAt: request.createdAt.toISOString(),
+    updatedAt: request.updatedAt.toISOString(),
+    handledAt: request.handledAt ? request.handledAt.toISOString() : null,
+  }))
+
+  const serializedLogs = logs.map((log) => ({
+    ...log,
+    createdAt: log.createdAt.toISOString(),
+  }))
+
+  return (
+    <AdminDashboardClient
+      admin={admin}
+      stats={stats}
+      users={users}
+      requests={serializedRequests}
+      logs={serializedLogs}
+    />
+  )
 }

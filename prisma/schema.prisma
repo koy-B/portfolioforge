@@ -34,17 +34,34 @@ enum PortfolioTemplate {
   SPLIT
 }
 
+enum RequestStatus {
+  PENDING
+  APPROVED
+  DECLINED
+}
+
+enum AdminLogType {
+  USER_ROLE_CHANGED
+  SUBSCRIPTION_CHANGED
+  PREMIUM_REQUEST_CREATED
+  PREMIUM_REQUEST_APPROVED
+  PREMIUM_REQUEST_DECLINED
+}
+
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  password     String
-  name         String
-  role         Role          @default(USER)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  profile      Profile?
-  portfolios   Portfolio[]
-  subscription Subscription?
+  id              String           @id @default(cuid())
+  email           String           @unique
+  password        String
+  name            String
+  role            Role             @default(USER)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  profile         Profile?
+  portfolios      Portfolio[]
+  subscription    Subscription?
+  premiumRequests PremiumRequest[]
+  adminLogs       AdminLog[]       @relation("AdminLogs")
+  userLogs        AdminLog[]       @relation("UserLogs")
 }
 
 model Profile {
@@ -91,4 +108,27 @@ model Subscription {
   startDate DateTime?
   endDate   DateTime?
   user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PremiumRequest {
+  id                 String        @id @default(cuid())
+  userId             String
+  status             RequestStatus @default(PENDING)
+  message            String        @default("")
+  templatePreference PortfolioTemplate?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  handledAt          DateTime?
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AdminLog {
+  id        String       @id @default(cuid())
+  type      AdminLogType
+  message   String
+  createdAt DateTime     @default(now())
+  adminId   String?
+  userId    String?
+  admin     User?        @relation("AdminLogs", fields: [adminId], references: [id], onDelete: Cascade)
+  user      User?        @relation("UserLogs", fields: [userId], references: [id], onDelete: Cascade)
 }

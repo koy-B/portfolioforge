@@ -15,6 +15,12 @@ export async function POST(request: Request) {
     }
 
     const { name, email, password } = parsed.data
+
+    if (!process.env.DATABASE_URL) {
+      console.error('[REGISTER_FATAL_ERROR] Missing DATABASE_URL environment variable')
+      return jsonError('Server configuration error: DATABASE_URL is missing', 500)
+    }
+
     const existingUser = await prisma.user.findUnique({ where: { email } })
 
     if (existingUser) {

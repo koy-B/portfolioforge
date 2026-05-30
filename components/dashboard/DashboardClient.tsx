@@ -13,6 +13,7 @@ import {
   ArrowUpRight,
   Eye,
   FolderOpen,
+  Menu,
   MoreHorizontal,
   Plus,
   Trash2,
@@ -45,6 +46,7 @@ export function DashboardClient({
   const router = useRouter()
   const { toast } = useToast()
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const isPremium = subscription?.status === 'PREMIUM'
   const premiumHref = whatsappPremiumLink(user.name)
@@ -77,22 +79,42 @@ export function DashboardClient({
   }
 
   return (
-    <div className="flex min-h-screen bg-brand-background">
+    <div className="relative flex min-h-screen bg-brand-background">
+      {sidebarOpen ? (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      ) : null}
+
       <Sidebar
         name={user.name}
         email={user.email}
         username={profileName}
         premium={isPremium}
+        mobileOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
       <main className="min-w-0 flex-1 overflow-y-auto">
         <header className="sticky top-0 z-20 border-b border-brand-border bg-white/80 backdrop-blur-xl">
           <div className="flex h-16 items-center justify-between px-6 lg:px-8">
-            <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-brand-subtle">{APP_NAME}</p>
-              <h1 className="text-lg font-semibold text-brand-foreground">Dashboard</h1>
-            </div>
             <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden rounded-xl border border-brand-border bg-white p-2 text-brand-muted transition hover:bg-brand-background"
+                aria-label="Open menu"
+              >
+                <Menu size={18} />
+              </button>
+              <div>
+                <p className="text-xs uppercase tracking-[0.24em] text-brand-subtle">{APP_NAME}</p>
+                <h1 className="text-lg font-semibold text-brand-foreground">Dashboard</h1>
+              </div>
+            </div>
+            <div className="hidden md:flex items-center gap-3">
               <Link href={premiumHref} target="_blank">
                 <Button variant="accent" size="sm">
                   <Sparkles size={14} />
@@ -107,6 +129,14 @@ export function DashboardClient({
                 Log out
               </button>
             </div>
+          </div>
+          <div className="flex items-center justify-between gap-3 px-6 py-3 md:hidden">
+            <Link href={premiumHref} target="_blank" className="w-full">
+              <Button variant="accent" size="sm" className="w-full">
+                <Sparkles size={14} />
+                Go Premium
+              </Button>
+            </Link>
           </div>
         </header>
 

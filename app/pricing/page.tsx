@@ -1,8 +1,10 @@
 'use client'
+import { useState } from 'react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
-import { CheckCircle, Zap, ArrowRight, Sparkles } from '@/lib/icons'
+import { useToast } from '@/components/ui/Toast'
+import { CheckCircle, Zap, Sparkles } from '@/lib/icons'
 import Link from 'next/link'
 import { whatsappPremiumLink } from '@/lib/site'
 
@@ -23,6 +25,34 @@ const faqs = [
 ]
 
 export default function PricingPage() {
+  const [requesting, setRequesting] = useState(false)
+  const { toast } = useToast()
+
+  async function handleRequestPremium() {
+    setRequesting(true)
+
+    try {
+      const response = await fetch('/api/premium-requests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: 'Demande d’accès à premium depuis la page pricing.' }),
+      })
+
+      if (!response.ok) {
+        const body = await response.json().catch(() => null)
+        throw new Error(body?.error || 'Failed to send request')
+      }
+
+      toast('Votre demande a été envoyée au support. Merci !', 'success')
+    } catch (error) {
+      toast((error as Error).message || 'Impossible d’envoyer la demande.', 'error')
+    } finally {
+      setRequesting(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#f8f7f4]">
       <Navbar />
@@ -69,10 +99,13 @@ export default function PricingPage() {
                       <Zap size={16} />
                     </Button>
                   </Link>
-                  <p className="text-xs text-[#a8a49f] font-medium italic">
-                    * Activation usually takes less than 24 hours
-                  </p>
+                  <Button variant="secondary" size="lg" className="w-full sm:w-auto" onClick={handleRequestPremium} loading={requesting}>
+                    Request premium internally
+                  </Button>
                 </div>
+                <p className="text-xs text-[#a8a49f] font-medium italic mt-3">
+                  * Activation usually takes less than 24 hours. You can aussi envoyer une demande directement depuis votre compte.
+                </p>
               </div>
 
               <div className="bg-[#0f0e0d] p-10 md:p-12 text-white flex flex-col justify-center">

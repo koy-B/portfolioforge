@@ -2,6 +2,8 @@ import { portfolioTemplates, profileTypes } from '@/lib/validators'
 
 export const APP_NAME = 'PortfolioForge'
 export const APP_DESCRIPTION = 'Build, manage, and publish a polished portfolio in one place.'
+export type ProfileType = (typeof profileTypes)[number]
+export type PortfolioTemplate = (typeof portfolioTemplates)[number]
 
 export function cnSlug(value: string) {
   return value
@@ -18,12 +20,16 @@ export function ensureUniqueSlug(base: string, suffix?: string) {
   return suffix ? `${cleanBase}-${cnSlug(suffix)}` : cleanBase
 }
 
-export function profileTypeLabel(type: (typeof profileTypes)[number]) {
-  return type[0].toUpperCase() + type.slice(1)
+export function profileTypeLabel(type: string) {
+  const value = type.trim()
+  if (!value) return ''
+  return value[0].toUpperCase() + value.slice(1)
 }
 
-export function templateLabel(template: (typeof portfolioTemplates)[number]) {
-  return template[0] + template.slice(1).toLowerCase()
+export function templateLabel(template: string) {
+  const value = template.trim()
+  if (!value) return ''
+  return value[0] + value.slice(1).toLowerCase()
 }
 
 export function whatsappPremiumLink(username: string) {
