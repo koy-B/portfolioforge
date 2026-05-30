@@ -13,6 +13,7 @@ import {
   Plus,
   Settings,
   Sparkles,
+  X,
   Zap,
 } from '@/lib/icons'
 
@@ -28,9 +29,11 @@ interface SidebarProps {
   email: string
   username: string
   premium: boolean
+  mobileOpen?: boolean
+  onClose?: () => void
 }
 
-export function Sidebar({ name, email, username, premium }: SidebarProps) {
+export function Sidebar({ name, email, username, premium, mobileOpen, onClose }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const initials = name
@@ -46,9 +49,13 @@ export function Sidebar({ name, email, username, premium }: SidebarProps) {
     router.refresh()
   }
 
+  const sidebarClass = mobileOpen
+    ? 'fixed inset-y-0 left-0 z-50 w-72 border-r border-brand-border bg-white/95 backdrop-blur-xl shadow-xl md:relative md:h-screen md:w-72 md:shrink-0'
+    : 'hidden md:flex md:h-screen md:w-72 md:shrink-0 md:flex-col md:border-r md:border-brand-border md:bg-white/90 md:backdrop-blur-xl'
+
   return (
-    <aside className="sticky top-0 flex h-screen w-72 shrink-0 flex-col border-r border-brand-border bg-white/90 backdrop-blur-xl">
-      <div className="flex h-16 items-center border-b border-brand-border px-6">
+    <aside className={`${sidebarClass} flex flex-col`}> 
+      <div className="flex h-16 items-center justify-between border-b border-brand-border px-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#101010] to-brand-accent">
             <Zap size={16} className="text-white" />
@@ -58,6 +65,16 @@ export function Sidebar({ name, email, username, premium }: SidebarProps) {
             <p className="text-[10px] uppercase tracking-[0.24em] text-brand-subtle">Workspace</p>
           </div>
         </Link>
+        {mobileOpen ? (
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl p-2 text-brand-muted transition hover:bg-brand-background md:hidden"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        ) : null}
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">

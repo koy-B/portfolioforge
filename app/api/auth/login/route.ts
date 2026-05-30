@@ -13,6 +13,11 @@ export async function POST(request: Request) {
       return jsonError('Invalid login data', 422, parsed.error.flatten())
     }
 
+    if (!process.env.DATABASE_URL) {
+      console.error('[LOGIN_FATAL_ERROR] Missing DATABASE_URL environment variable')
+      return jsonError('Server configuration error: DATABASE_URL is missing', 500)
+    }
+
     const user = await prisma.user.findUnique({
       where: { email: parsed.data.email },
       select: {

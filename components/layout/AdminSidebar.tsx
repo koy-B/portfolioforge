@@ -10,6 +10,7 @@ import {
   LogOut,
   Shield,
   Users,
+  X,
   Zap,
 } from '@/lib/icons'
 
@@ -22,9 +23,11 @@ const navItems = [
 interface AdminSidebarProps {
   name: string
   email: string
+  mobileOpen?: boolean
+  onClose?: () => void
 }
 
-export function AdminSidebar({ name, email }: AdminSidebarProps) {
+export function AdminSidebar({ name, email, mobileOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const initials = name
@@ -40,9 +43,13 @@ export function AdminSidebar({ name, email }: AdminSidebarProps) {
     router.refresh()
   }
 
+  const sidebarClass = mobileOpen
+    ? 'fixed inset-y-0 left-0 z-50 w-72 border-r border-white/10 bg-brand-foreground/95 shadow-xl md:relative md:h-screen md:w-72 md:shrink-0'
+    : 'hidden md:flex md:h-screen md:w-72 md:shrink-0'
+
   return (
-    <aside className="sticky top-0 flex h-screen w-72 shrink-0 flex-col border-r border-brand-foreground bg-brand-foreground text-white">
-      <div className="flex h-16 items-center border-b border-white/10 px-6">
+    <aside className={`${sidebarClass} flex flex-col text-white`}>
+      <div className="flex h-16 items-center justify-between border-b border-white/10 px-6">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-brand-accent to-brand-accent-2">
             <Zap size={16} className="text-white" />
@@ -55,6 +62,16 @@ export function AdminSidebar({ name, email }: AdminSidebarProps) {
             </p>
           </div>
         </Link>
+        {mobileOpen ? (
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl p-2 text-white/70 transition hover:bg-white/10 md:hidden"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        ) : null}
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">

@@ -58,8 +58,19 @@ export const subscriptionActionSchema = z.object({
   userId: z.string().cuid(),
 })
 
+export const premiumRequestSchema = z.object({
+  message: z.string().trim().max(500).optional().default(''),
+  templatePreference: z.enum(portfolioTemplates).optional(),
+})
+
+export const premiumRequestActionSchema = z.object({
+  action: z.enum(['approve', 'decline']),
+})
+
 export type RegisterInput = z.infer<typeof registerSchema>
 export type LoginInput = z.infer<typeof loginSchema>
 export type ProfileInput = z.infer<typeof profileSchema>
 export type PortfolioInput = z.infer<typeof portfolioSchema>
 export type ProjectInput = z.infer<typeof projectSchema>
+export type PremiumRequestInput = z.infer<typeof premiumRequestSchema>
+export type PremiumRequestAction = z.infer<typeof premiumRequestActionSchema>
